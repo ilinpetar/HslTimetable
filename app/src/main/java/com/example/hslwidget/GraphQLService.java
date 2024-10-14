@@ -9,9 +9,9 @@ import retrofit2.http.Query;
 
 public interface GraphQLService {
 
-    record Trip(String routeShortName) {}
+    record Trip(String routeShortName, String directionId) {}
     record StopTime(Long realtimeArrival, String headsign, Trip trip) {}
-    record Stop(String name, List<StopTime> stoptimesWithoutPatterns) {}
+    record Stop(String name, String code, List<StopTime> stoptimesWithoutPatterns) {}
     record Data(List<Stop> stops) {}
     record HslResponse(Data data) {}
 

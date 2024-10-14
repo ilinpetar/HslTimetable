@@ -12,7 +12,8 @@ import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,11 +30,13 @@ public class HslTimetable {
         {
           stops(ids: ["HSL:2232280","HSL:2322229","HSL:1201229"]) {
             name
+            code
             stoptimesWithoutPatterns(timeRange: 1800, numberOfDepartures: 10) {
               realtimeArrival
               headsign
               trip {
                 routeShortName
+                directionId
               }
             }
           }
@@ -50,19 +53,20 @@ public class HslTimetable {
         Call<HslResponse> call = service.obtainTimetables(subscriptionKey, graphqlQuery);
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<HslResponse> call, Response<HslResponse> response) {
-                var hslResponse = response.body();
-                view.setText(processData(hslResponse));
+            public void onResponse(@NotNull Call<HslResponse> call, @NotNull Response<HslResponse> response) {
+                view.setText(processData(response.body()));
             }
 
             @Override
-            public void onFailure(Call<HslResponse> call, Throwable t) {
+            public void onFailure(@NotNull Call<HslResponse> call, @NotNull Throwable t) {
                 // Handle the error
                 StringBuilder buffer = new StringBuilder();
                 buffer.append("<h1>")
-                    .append("Last update: ").append(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date()))
+                    .append("Last update: ").append(DateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.UK).format(new Date()))
                     .append("</h1>")
-                    .append(t.getLocalizedMessage());
+                    .append("<font color='red'> ")
+                    .append(t.getLocalizedMessage())
+                    .append("</font>");
                 view.setText(Html.fromHtml(buffer.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY));
             }
         });
@@ -74,23 +78,37 @@ public class HslTimetable {
 
         StringBuilder buffer = new StringBuilder();
         buffer.append("<h1>")
-            .append("Last update: ").append(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date()))
+            .append("Last update: ").append(DateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.UK).format(new Date()))
             .append("</h1>");
 
         hslResponse.data().stops().forEach(stop -> {
             buffer.append("<h3>")
                 .append(stop.name())
+                .append(" ")
+                .append(stop.code())
                 .append("</h3>");
 
             stop.stoptimesWithoutPatterns().forEach(stopTime -> {
+                // inbound trips after 10:00...
+                if (("1".equals(stopTime.trip().directionId()) && secondOfDay > 36000)
+                    // ...and outbound trips before 10:00...
+                    || ("0".equals(stopTime.trip().directionId()) && secondOfDay < 36000)) {
+                    // ...are ignored
+                    return;
+                }
+                // render only listed bus lines
                 if (routeShortNames.contains(stopTime.trip().routeShortName())) {
+                    long arrival = stopTime.realtimeArrival() - secondOfDay;
+                    String color = arrival < 300 ? "#FF0000" : "#006400";
                     buffer.append("<div>")
                         .append("<b>")
                         .append(stopTime.trip().routeShortName())
                         .append("</b>")
                         .append(" [").append(stopTime.headsign()).append("] ")
-                        .append("<b")
-                        .append(DateUtils.formatElapsedTime(stopTime.realtimeArrival() - secondOfDay))
+                        .append("<b>")
+                        .append("<font color='").append(color).append("'> ")
+                        .append(DateUtils.formatElapsedTime(arrival))
+                        .append("</font>")
                         .append("</b>")
                         .append("</div>");
                 }
