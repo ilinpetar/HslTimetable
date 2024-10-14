@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "HslWidget"
+rootProject.name = "HslTimetable"
 include(":app")
  

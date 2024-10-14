@@ -1,5 +1,4 @@
 <resources>
-  <string name="app_name">HslWidget</string>
+  <string name="app_name">Hsl Timetable</string>
   <string name="hsl_logo">HSL Logo</string>
-  <string name="timetable">Timetable</string>
 </resources>
