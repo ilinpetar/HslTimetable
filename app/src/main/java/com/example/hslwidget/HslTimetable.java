@@ -1,18 +1,21 @@
 package com.example.hslwidget;
 
+import android.content.Context;
 import android.icu.text.DateFormat;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.widget.TextView;
 import androidx.core.text.HtmlCompat;
+import androidx.preference.PreferenceManager;
 import com.example.hslwidget.GraphQLService.HslResponse;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,12 +26,13 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HslTimetable {
 
+    private final Context context;
     private final String hslGraphqlBaseUrl = "https://api.digitransit.fi/";
-    private final String subscriptionKey = "76cc1b419f644891bee2588cfbaf7b5e";
-    private final List<String> routeShortNames = Arrays.asList("121", "121A", "164", "164K");
+    private Set<String> busLines;
+    private Set<String> busStops;
     private final String graphqlQuery = """
         {
-          stops(ids: ["HSL:2232280","HSL:2322229","HSL:1201229"]) {
+          stops(ids: [%s]) {
             name
             code
             stoptimesWithoutPatterns(timeRange: 1800, numberOfDepartures: 10) {
@@ -43,14 +47,28 @@ public class HslTimetable {
         }
         """;
 
+    public HslTimetable(Context context) {
+        this.context = context;
+    }
+
     public void obtainTimetables(TextView view) {
+
+        var preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (preferences.getAll().isEmpty()) {
+            return;
+        }
+        busLines = preferences.getStringSet("multi_select_bus_lines_preference", new HashSet<>());
+        busStops = preferences.getStringSet("multi_select_bus_stops_preference", new HashSet<>());
+
         var retrofit = new Retrofit.Builder()
             .baseUrl(hslGraphqlBaseUrl)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build();
         var service = retrofit.create(GraphQLService.class);
-        Call<HslResponse> call = service.obtainTimetables(subscriptionKey, graphqlQuery);
+        var subscriptionKey = preferences.getString("subscription_key", "");
+        var busStopsArray = busStops.stream().map(busStop -> String.format("\"%s\"", busStop)).collect(Collectors.joining(","));
+        Call<HslResponse> call = service.obtainTimetables(subscriptionKey, graphqlQuery.formatted(busStopsArray));
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<HslResponse> call, @NotNull Response<HslResponse> response) {
@@ -97,7 +115,7 @@ public class HslTimetable {
                     return;
                 }
                 // render only listed bus lines
-                if (routeShortNames.contains(stopTime.trip().routeShortName())) {
+                if (busLines.contains(stopTime.trip().routeShortName())) {
                     long arrival = stopTime.realtimeArrival() - secondOfDay;
                     String color = arrival < 300 ? "#FF0000" : "#006400";
                     buffer.append("<div>")

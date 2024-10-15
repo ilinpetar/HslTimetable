@@ -1,0 +1,33 @@
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <PreferenceCategory
+    app:title="@string/api_header">
+
+    <EditTextPreference
+      app:key="subscription_key"
+      app:summary="@string/subscription_key_desc"
+      app:title="@string/subscription_key"/>
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    app:title="@string/bus_data_header">
+
+    <MultiSelectListPreference
+      android:entries="@array/bus_stops_names"
+      android:entryValues="@array/bus_stops_codes"
+      android:key="multi_select_bus_stops_preference"
+      app:summary="@string/bus_stops_desc"
+      android:title="@string/bus_stops"/>
+    <MultiSelectListPreference
+      android:entries="@array/bus_lines"
+      android:entryValues="@array/bus_lines"
+      android:key="multi_select_bus_lines_preference"
+      app:summary="@string/bus_lines_desc"
+      android:title="@string/bus_lines"/>
+
+  </PreferenceCategory>
+
+</PreferenceScreen>
