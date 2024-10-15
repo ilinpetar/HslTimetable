@@ -117,8 +117,10 @@ public class HslTimetable {
                         .append("</b>")
                         .append(" [").append(stopTime.headsign()).append("] ")
                         .append("<b>")
-                        .append("<font color='").append(color).append("'> ")
+                        .append("<font color='").append(color).append("'>")
+                        .append("in ")
                         .append(DateUtils.formatElapsedTime(arrival))
+                        .append(" min:sec")
                         .append("</font>")
                         .append("</b>")
                         .append("</div>");
