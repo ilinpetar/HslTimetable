@@ -1,4 +1,4 @@
-package com.example.hslwidget;
+package com.example.hsltimetable;
 
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;

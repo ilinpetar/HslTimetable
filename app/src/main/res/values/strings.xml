@@ -6,14 +6,14 @@
 
   <!-- Preference Titles -->
   <string name="api_header">Digitransit API</string>
-  <string name="bus_data_header">Bus stops and lines</string>
+  <string name="hsl_data_header">Bus/Metro/Train stops and routes</string>
 
   <!-- Digitransit API Preferences -->
   <string name="subscription_key">Subscription key</string>
   <string name="subscription_key_desc">Digitransit API subscription key (register as developer)</string>
-  <!-- Bus stops and lines Preferences -->
-  <string name="bus_stops">Bus stops</string>
-  <string name="bus_stops_desc">Select bus stops of interest</string>
-  <string name="bus_lines">Bus lines</string>
-  <string name="bus_lines_desc">Select bus lines of interest</string>
+  <!-- Stops and routes Preferences -->
+  <string name="stops">Stops</string>
+  <string name="stops_desc">Select stops of interest</string>
+  <string name="routes">Routes</string>
+  <string name="routes_desc">Select routes of interest</string>
 </resources>

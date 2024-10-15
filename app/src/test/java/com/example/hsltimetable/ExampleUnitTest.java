@@ -1,4 +1,4 @@
-package com.example.hslwidget;
+package com.example.hsltimetable;
 
 import org.junit.Test;
 

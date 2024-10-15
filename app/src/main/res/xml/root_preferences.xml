@@ -13,20 +13,20 @@
   </PreferenceCategory>
 
   <PreferenceCategory
-    app:title="@string/bus_data_header">
+    app:title="@string/hsl_data_header">
 
     <MultiSelectListPreference
-      android:entries="@array/bus_stops_names"
-      android:entryValues="@array/bus_stops_codes"
-      android:key="multi_select_bus_stops_preference"
-      app:summary="@string/bus_stops_desc"
-      android:title="@string/bus_stops"/>
+      android:entries="@array/stop_names"
+      android:entryValues="@array/stop_codes"
+      android:key="multi_select_stops_preference"
+      app:summary="@string/stops_desc"
+      android:title="@string/stops"/>
     <MultiSelectListPreference
-      android:entries="@array/bus_lines"
-      android:entryValues="@array/bus_lines"
-      android:key="multi_select_bus_lines_preference"
-      app:summary="@string/bus_lines_desc"
-      android:title="@string/bus_lines"/>
+      android:entries="@array/routes"
+      android:entryValues="@array/routes"
+      android:key="multi_select_routes_preference"
+      app:summary="@string/routes_desc"
+      android:title="@string/routes"/>
 
   </PreferenceCategory>
 

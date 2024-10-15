@@ -1,4 +1,4 @@
-package com.example.hslwidget;
+package com.example.hsltimetable;
 
 import java.util.List;
 import retrofit2.Call;

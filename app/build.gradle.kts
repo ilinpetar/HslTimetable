@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.hslwidget"
+    namespace = "com.example.hsltimetable"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.hslwidget"
+        applicationId = "com.example.hsltimetable"
         minSdk = 34
         targetSdk = 34
         versionCode = 1
