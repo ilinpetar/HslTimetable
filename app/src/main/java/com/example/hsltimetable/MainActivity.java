@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -25,8 +28,12 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // make main panel scrollable
+        TextView timetable = findViewById(R.id.timetable);
+        timetable.setMovementMethod(new ScrollingMovementMethod());
+
         // settings button in the upper right corner of the screen
-        Button settingsButton = findViewById(R.id.btnSettings);
+        var settingsButton = findViewById(R.id.btnSettings);
         settingsButton.setOnClickListener(view -> {
             // opening a new intent to open settings activity.
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
