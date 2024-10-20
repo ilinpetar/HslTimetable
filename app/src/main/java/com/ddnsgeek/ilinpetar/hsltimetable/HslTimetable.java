@@ -1,4 +1,4 @@
-package com.example.hsltimetable;
+package com.ddnsgeek.ilinpetar.hsltimetable;
 
 import android.content.Context;
 import android.icu.text.DateFormat;
@@ -8,7 +8,7 @@ import android.text.format.DateUtils;
 import android.widget.TextView;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
-import com.example.hsltimetable.GraphQLService.HslResponse;
+import com.ddnsgeek.ilinpetar.hsltimetable.GraphQLService.HslResponse;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
 import java.util.Date;
@@ -27,9 +27,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class HslTimetable {
 
     private final Context context;
-    private final String hslGraphqlBaseUrl = "https://api.digitransit.fi/";
     private Set<String> routes;
-    private Set<String> stops;
     private final String graphqlQuery = """
         {
           stops(ids: [%s]) {
@@ -58,10 +56,10 @@ public class HslTimetable {
             return;
         }
         routes = preferences.getStringSet("multi_select_routes_preference", new HashSet<>());
-        stops = preferences.getStringSet("multi_select_stops_preference", new HashSet<>());
+        var stops = preferences.getStringSet("multi_select_stops_preference", new HashSet<>());
 
         var retrofit = new Retrofit.Builder()
-            .baseUrl(hslGraphqlBaseUrl)
+            .baseUrl("https://api.digitransit.fi/")
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build();

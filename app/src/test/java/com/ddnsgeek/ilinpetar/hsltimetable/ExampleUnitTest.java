@@ -1,4 +1,4 @@
-package com.example.hsltimetable;
+package com.ddnsgeek.ilinpetar.hsltimetable;
 
 import org.junit.Test;
 

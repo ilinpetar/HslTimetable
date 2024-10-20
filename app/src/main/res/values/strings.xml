@@ -7,6 +7,7 @@
   <!-- Preference Titles -->
   <string name="api_header">Digitransit API</string>
   <string name="hsl_data_header">Bus/Metro/Train stops and routes</string>
+  <string name="about">About</string>
 
   <!-- Digitransit API Preferences -->
   <string name="subscription_key">Subscription key</string>
@@ -16,4 +17,8 @@
   <string name="stops_desc">Select stops of interest</string>
   <string name="routes">Routes</string>
   <string name="routes_desc">Select routes of interest</string>
+  <!-- About -->
+  <string name="about_desc">Application version, details, author, etc</string>
+  <string name="title_activity_about">AboutActivity</string>
+  <string name="about_details">HSL Timetable v 1.0\nAuthor Petar Ilin ilinpetar@gmail.com\nCopyright 2024</string>
 </resources>

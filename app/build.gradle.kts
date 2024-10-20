@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.hsltimetable"
+    namespace = "com.ddnsgeek.ilinpetar.hsltimetable"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.hsltimetable"
+        applicationId = "com.ddnsgeek.ilinpetar.hsltimetable"
         minSdk = 34
         targetSdk = 34
         versionCode = 1

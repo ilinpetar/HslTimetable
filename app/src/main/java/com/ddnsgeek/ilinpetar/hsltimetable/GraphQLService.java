@@ -1,4 +1,4 @@
-package com.example.hsltimetable;
+package com.ddnsgeek.ilinpetar.hsltimetable;
 
 import java.util.List;
 import retrofit2.Call;

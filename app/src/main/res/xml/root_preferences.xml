@@ -19,14 +19,29 @@
       android:entries="@array/stop_names"
       android:entryValues="@array/stop_codes"
       android:key="multi_select_stops_preference"
-      app:summary="@string/stops_desc"
-      android:title="@string/stops"/>
+      android:title="@string/stops"
+      app:summary="@string/stops_desc"/>
     <MultiSelectListPreference
       android:entries="@array/routes"
       android:entryValues="@array/routes"
       android:key="multi_select_routes_preference"
-      app:summary="@string/routes_desc"
-      android:title="@string/routes"/>
+      android:title="@string/routes"
+      app:summary="@string/routes_desc"/>
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+    app:title="@string/about">
+
+    <Preference
+      app:key="about"
+      app:summary="@string/about_desc"
+      app:title="@string/about">
+      <intent
+        android:action="android.intent.action.VIEW"
+        android:targetClass="com.ddnsgeek.ilinpetar.hsltimetable.AboutActivity"
+        android:targetPackage="com.ddnsgeek.ilinpetar.hsltimetable" />
+    </Preference>
 
   </PreferenceCategory>
 

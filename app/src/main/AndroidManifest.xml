@@ -17,6 +17,11 @@
       android:label="@string/title_activity_settings"
       android:name=".SettingsActivity"/>
     <activity
+      android:exported="false"
+      android:label="@string/title_activity_about"
+      android:name=".AboutActivity">
+    </activity>
+    <activity
       android:exported="true"
       android:name=".MainActivity">
       <intent-filter>

@@ -1,12 +1,10 @@
-package com.example.hsltimetable;
+package com.ddnsgeek.ilinpetar.hsltimetable;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;

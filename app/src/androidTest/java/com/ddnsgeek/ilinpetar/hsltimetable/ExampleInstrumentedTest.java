@@ -1,4 +1,4 @@
-package com.example.hsltimetable;
+package com.ddnsgeek.ilinpetar.hsltimetable;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.hsltimetable", appContext.getPackageName());
+        assertEquals("com.ddnsgeek.ilinpetar.hsltimetable", appContext.getPackageName());
     }
 }
