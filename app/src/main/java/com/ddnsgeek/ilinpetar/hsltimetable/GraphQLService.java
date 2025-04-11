@@ -16,6 +16,6 @@ public interface GraphQLService {
     record HslResponse(Data data) {}
 
     @Headers({"Content-Type: application/graphql"})
-    @POST("routing/v1/routers/hsl/index/graphql")
+    @POST("routing/v2/hsl/gtfs/v1")
     Call<HslResponse> obtainTimetables(@Query("digitransit-subscription-key") String key, @Body String query);
 }
