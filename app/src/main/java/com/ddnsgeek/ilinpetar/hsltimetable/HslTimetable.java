@@ -6,6 +6,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.widget.TextView;
+import androidx.core.app.NotificationCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
 import com.ddnsgeek.ilinpetar.hsltimetable.GraphQLService.HslResponse;
@@ -49,7 +50,7 @@ public class HslTimetable {
         this.context = context;
     }
 
-    public void obtainTimetables(TextView view) {
+    public void obtainTimetables(TextView view, NotificationCompat.Builder builder) {
 
         var preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (preferences.getAll().isEmpty()) {
@@ -70,20 +71,24 @@ public class HslTimetable {
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NotNull Call<HslResponse> call, @NotNull Response<HslResponse> response) {
-                view.setText(processData(response.body()));
+                if (response.body() != null) {
+                    view.setText(processData(response.body()));
+                    var notification = processNotificationData(response.body());
+                    builder.setContentText(notification)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(notification));
+                }
             }
 
             @Override
             public void onFailure(@NotNull Call<HslResponse> call, @NotNull Throwable t) {
                 // Handle the error
-                StringBuilder buffer = new StringBuilder();
-                buffer.append("<h1>")
-                    .append("Last update: ").append(DateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.UK).format(new Date()))
-                    .append("</h1>")
-                    .append("<font color='red'> ")
-                    .append(t.getLocalizedMessage())
-                    .append("</font>");
-                view.setText(Html.fromHtml(buffer.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+                String buffer = "<h1>"
+                    + "Last update: " + DateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.UK).format(new Date())
+                    + "</h1>"
+                    + "<font color='red'>"
+                    + t.getLocalizedMessage()
+                    + "</font>";
+                view.setText(Html.fromHtml(buffer, HtmlCompat.FROM_HTML_MODE_LEGACY));
             }
         });
     }
@@ -126,5 +131,32 @@ public class HslTimetable {
             });
         });
         return Html.fromHtml(buffer.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
+    }
+
+    private String processNotificationData(HslResponse hslResponse) {
+        var now = LocalTime.now();
+        var secondOfDay = now.get(ChronoField.SECOND_OF_DAY);
+
+        StringBuilder buffer = new StringBuilder();
+
+        hslResponse.data().stops().forEach(stop ->
+            stop.stoptimesWithoutPatterns().forEach(stopTime -> {
+                // render only selected routes
+                if (routes.contains(stopTime.trip().routeShortName())) {
+                    long arrival = stopTime.realtimeArrival() - secondOfDay;
+                    if (arrival > 600) {
+                        return;
+                    }
+                    buffer.append(" • ")
+                        .append("(")
+                        .append(stop.name().substring(0, 5))
+                        .append("…) ")
+                        .append(stopTime.trip().routeShortName())
+                        .append(" - ")
+                        .append(DateUtils.formatElapsedTime(arrival))
+                        .append("\n");
+                }
+            }));
+        return buffer.toString();
     }
 }

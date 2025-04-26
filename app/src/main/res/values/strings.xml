@@ -20,5 +20,9 @@
   <!-- About -->
   <string name="about_desc">Application version, details, author, etc</string>
   <string name="title_activity_about">AboutActivity</string>
-  <string name="about_details">HSL Timetable v 1.0\nAuthor Petar Ilin ilinpetar@gmail.com\nCopyright 2024</string>
+  <string name="about_details">HSL Timetable v 1.0\nAuthor Petar Ilin ilinpetar@gmail.com\nCopyright © 2025</string>
+
+  <!-- Notifications -->
+  <string name="channel_name">Next departures</string>
+  <string name="channel_description">Next departures:</string>
 </resources>
