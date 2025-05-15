@@ -1,3 +1,6 @@
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter.ofPattern
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -34,6 +37,11 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
+    }
+
+    applicationVariants.all {
+        resValue("string", "versionName", versionName)
+        resValue("string", "copyrightYear", LocalDate.now().format(ofPattern("yyyy")))
     }
 }
 

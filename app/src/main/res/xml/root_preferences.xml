@@ -29,20 +29,4 @@
       app:summary="@string/routes_desc"/>
 
   </PreferenceCategory>
-
-  <PreferenceCategory
-    app:title="@string/about">
-
-    <Preference
-      app:key="about"
-      app:summary="@string/about_desc"
-      app:title="@string/about">
-      <intent
-        android:action="android.intent.action.VIEW"
-        android:targetClass="com.ddnsgeek.ilinpetar.hsltimetable.AboutActivity"
-        android:targetPackage="com.ddnsgeek.ilinpetar.hsltimetable" />
-    </Preference>
-
-  </PreferenceCategory>
-
 </PreferenceScreen>
