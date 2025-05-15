@@ -1,13 +1,11 @@
-package com.ddnsgeek.ilinpetar.hsltimetable;
+package com.ddnsgeek.ilinpetar.hsltimetable.client;
 
 import static android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE;
 import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
 
 import android.Manifest.permission;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.text.Html;
-import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +15,8 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.PreferenceManager;
-import com.ddnsgeek.ilinpetar.hsltimetable.GraphQLService.HslResponse;
+import com.ddnsgeek.ilinpetar.hsltimetable.service.GraphQLService;
+import com.ddnsgeek.ilinpetar.hsltimetable.service.GraphQLService.HslResponse;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
@@ -34,7 +33,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HslTimetable {
 
-    private final Context context;
+    private final AppCompatActivity activity;
     private Set<String> routes;
     private static final String GRAPHQL_QUERY = """
         {
@@ -55,13 +54,13 @@ public class HslTimetable {
     private static final int PERMISSION_REQUEST_CODE = 1;
     private static final int NOTIFICATION_ID = 1;
 
-    public HslTimetable(Context context) {
-        this.context = context;
+    public HslTimetable(AppCompatActivity activity) {
+        this.activity = activity;
     }
 
-    public void obtainTimetables(AppCompatActivity activity, TextView view, NotificationCompat.Builder builder) {
+    public void obtainTimetables(TextView textView, NotificationCompat.Builder builder) {
 
-        var preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        var preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         if (preferences.getAll().isEmpty()) {
             return;
         }
@@ -81,11 +80,13 @@ public class HslTimetable {
             @Override
             public void onResponse(@NotNull Call<HslResponse> call, @NotNull Response<HslResponse> response) {
                 if (response.body() != null) {
-                    view.setText(processData(response.body()));
-                    var notification = processNotificationData(response.body());
+                    var textViewContent = generateTextViewContent(response.body());
+                    textView.setText(Html.fromHtml(textViewContent, HtmlCompat.FROM_HTML_MODE_LEGACY));
+                    var notificationContent = generateNotificationContent(response.body());
                     builder
-                        .setContentText(notification)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(notification));
+                        .setContentText(notificationContent)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationContent));
+
                     if (ContextCompat.checkSelfPermission(activity, permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(activity, new String[]{permission.POST_NOTIFICATIONS}, PERMISSION_REQUEST_CODE);
                     } else {
@@ -100,12 +101,12 @@ public class HslTimetable {
                 String buffer = "<font color='red'>"
                     + t.getLocalizedMessage()
                     + "</font>";
-                view.setText(Html.fromHtml(buffer, HtmlCompat.FROM_HTML_MODE_LEGACY));
+                textView.setText(Html.fromHtml(buffer, HtmlCompat.FROM_HTML_MODE_LEGACY));
             }
         });
     }
 
-    private Spanned processData(HslResponse hslResponse) {
+    private String generateTextViewContent(HslResponse hslResponse) {
         var now = LocalTime.now();
         var secondOfDay = now.get(ChronoField.SECOND_OF_DAY);
 
@@ -137,10 +138,10 @@ public class HslTimetable {
                 }
             });
         });
-        return Html.fromHtml(buffer.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
+        return buffer.toString();
     }
 
-    private String processNotificationData(HslResponse hslResponse) {
+    private String generateNotificationContent(HslResponse hslResponse) {
         var now = LocalTime.now();
         var secondOfDay = now.get(ChronoField.SECOND_OF_DAY);
 
@@ -151,7 +152,7 @@ public class HslTimetable {
                 // render only selected routes
                 if (routes.contains(stopTime.trip().routeShortName())) {
                     long arrival = stopTime.realtimeArrival() - secondOfDay;
-                    if (arrival > 18000) {
+                    if (arrival > 900) {
                         return;
                     }
                     buffer.append("•")

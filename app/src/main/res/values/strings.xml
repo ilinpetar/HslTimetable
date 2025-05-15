@@ -1,6 +1,7 @@
 <resources>
   <string name="app_name">HSL Timetable</string>
   <string name="hsl_logo">HSL Logo</string>
+  <string name="home">Home</string>
   <string name="settings">Settings</string>
   <string name="title_activity_settings">SettingsActivity</string>
 
@@ -18,9 +19,7 @@
   <string name="routes">Routes</string>
   <string name="routes_desc">Select routes of interest</string>
   <!-- About -->
-  <string name="about_desc">Application version, details, author, etc</string>
-  <string name="title_activity_about">AboutActivity</string>
-  <string name="about_details">HSL Timetable v 1.1\nAuthor Petar Ilin ilinpetar@gmail.com\nCopyright © 2025</string>
+  <string name="about_details">HSL Timetable v %s\nAuthor Petar Ilin &lt;ilinpetar@gmail.com&gt;\nCopyright © %s</string>
 
   <!-- Notifications -->
   <string name="channel_name">Next departures</string>
